@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    build: "4"
+  name: {{ .Values.app.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+      - name: {{ .Values.app.name }}
+{{- if eq .Values.region "local" }}
+        image: dyadin/rancher-demo:4
+{{- end }}
+{{- if eq .Values.region "public-AKS" }}
+        image: nginx:1.18.0-alpine
+{{- end }}
+        imagePullPolicy: {{ .Values.deployment.pullpolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
