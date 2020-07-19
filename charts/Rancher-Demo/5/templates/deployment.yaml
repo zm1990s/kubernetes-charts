@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    build: "5"
+  name: {{ .Values.app.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+      - name: {{ .Values.app.name }}
+        image: dyadin/rancher-demo:5
+        imagePullPolicy: {{ .Values.deployment.pullpolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
